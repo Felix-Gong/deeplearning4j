@@ -26,7 +26,6 @@
 #if  defined(SD_COMMON_TYPES_GEN) && defined(SD_COMMON_TYPES_@FL_TYPE_INDEX@) && defined(SD_INDEXING_TYPES_0)
 namespace functions {
     namespace indexreduce {
-        BUILD_DOUBLE_TEMPLATE(template class SD_LIB_HIDDEN IndexReduce, , SD_COMMON_TYPES_@FL_TYPE_INDEX@, SD_INDEXING_TYPES_0);
     }
 }
 #endif

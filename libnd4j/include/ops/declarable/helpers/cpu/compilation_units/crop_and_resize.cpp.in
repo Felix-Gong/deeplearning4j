@@ -25,6 +25,7 @@
 #include <ops/declarable/helpers/crop_and_resize.h>
 #include <ops/declarable/helpers/cpu/crop_and_resize.hpp>
 #include <system/op_boilerplate.h>
+#include <system/type_boilerplate.h>
 #if NOT_EXCLUDED(OP_crop_and_resize)
 
 #cmakedefine SD_COMMON_TYPES_GEN
@@ -32,7 +33,6 @@
 namespace sd {
     namespace ops {
         namespace helpers {
-            BUILD_TRIPLE_TEMPLATE(template SD_LIB_HIDDEN void cropAndResizeFunctor_, (NDArray *images, NDArray *boxes, NDArray *indices, NDArray *cropSize, int method, double extrapolationVal, NDArray *crops), SD_COMMON_TYPES_@FL_TYPE_INDEX@, SD_FLOAT_TYPES, SD_INTEGER_TYPES);
         }
     }
 }
