@@ -28,7 +28,6 @@ import org.deeplearning4j.config.DL4JSystemProperties;
 import org.deeplearning4j.nn.api.Model;
 import org.deeplearning4j.nn.conf.ComputationGraphConfiguration;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
-import org.deeplearning4j.nn.modelimport.keras.KerasModelImport;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.dataset.api.preprocessor.Normalizer;
 
@@ -84,11 +83,11 @@ public class ModelGuesser {
         } catch (Exception e) {
             log.warn("Tried multi layer config from json", e);
             try {
-                return KerasModelImport.importKerasModelConfiguration(path);
+                throw new ModelGuesserException("Keras model import unavailable (modelimport module excluded on RISC-V)");
             } catch (Exception e1) {
                 log.warn("Tried keras model config", e);
                 try {
-                    return KerasModelImport.importKerasSequentialConfiguration(path);
+                    throw new ModelGuesserException("Keras model import unavailable (modelimport module excluded on RISC-V)");
                 } catch (Exception e2) {
                     log.warn("Tried keras sequence config", e);
                     try {
@@ -158,11 +157,11 @@ public class ModelGuesser {
                         return ModelSerializer.restoreComputationGraph(new File(path), false);
                     } catch (Exception e5) {
                         try {
-                            return KerasModelImport.importKerasModelAndWeights(path);
+                            throw new ModelGuesserException("Keras model import unavailable (modelimport module excluded on RISC-V)");
                         } catch (Exception e2) {
                             log.warn("Tried multi layer network keras");
                             try {
-                                return KerasModelImport.importKerasSequentialModelAndWeights(path);
+                                throw new ModelGuesserException("Keras model import unavailable (modelimport module excluded on RISC-V)");
 
                             } catch (Exception e3) {
                                 throw new ModelGuesserException("Unable to load model from path " + path
