@@ -642,7 +642,7 @@ void NativeOpExecutioner::execReduce3(sd::LaunchContext *lc, int opNum, const vo
   const auto xLen = shape::length(hXShapeInfo);
   const auto yLen = shape::length(hYShapeInfo);
 
-  sd::TadPack *tadPack;
+  std::shared_ptr<sd::TadPack> tadPack;
   sd::LongType *castedConst = const_cast<sd::LongType *>(hXShapeInfo);
   sd::LongType *hYShapeInfoNonConst = const_cast<sd::LongType *>(hYShapeInfo);
   if (xLen == yLen) {
@@ -704,7 +704,7 @@ void NativeOpExecutioner::execReduce3TAD(sd::LaunchContext *lc, int opNum, const
   const auto xLen = shape::length(hXShapeInfo);
   const auto yLen = shape::length(hYShapeInfo);
 
-  sd::TadPack *tadPack;
+  std::shared_ptr<sd::TadPack> tadPack;
   sd::LongType *castedConst = const_cast<sd::LongType *>(hXShapeInfo);
   sd::LongType *hYShapeInfoNonConst = const_cast<sd::LongType *>(hYShapeInfo);
   if (xLen == yLen) {
@@ -1055,22 +1055,11 @@ void NativeOpExecutioner::execTransformAny(sd::LaunchContext *lc, int opNum, con
   auto zType = sd::ArrayOptions::dataType(hZShapeInfo);
 
   if(sd::DataTypeUtils::isS(xType)) {
-    auto func = PRAGMA_THREADS_DO {
-      BUILD_DOUBLE_SELECTOR(xType, zType, functions::transform::TransformAny,
-                            ::exec(opNum,
-                                   hX,
-                                   hXShapeInfo,
-                                   hZ,
-                                   hZShapeInfo,
-                                   extraParams,
-                                   thread_id,
-                                   numThreads),
-                            SD_STRING_TYPES, SD_STRING_TYPES);
-    };
-
-    samediff::Threads::parallel_do(
-        func, sd::math::sd_max<int>(1, sd::math::sd_min<int>(shape::length(hZShapeInfo) / 1024,
-                                                             sd::Environment::getInstance().maxMasterThreads())));
+    // RISC-V: SD_STRING_TYPES TransformAny instances are not codegen'd (no
+    // simdOps::Assign for std::string), and BUILD_DOUBLE_TEMPLATE over
+    // (UTF8, stdstring) trips the pair-compiled declaration macros.  String
+    // transforms are unused by the RISC-V benchmark suite, so reject them.
+    THROW_EXCEPTION("String TransformAny not supported on RISC-V (no codegen simdOps for std::string)");
   } else {
     auto func = PRAGMA_THREADS_DO {
       BUILD_DOUBLE_SELECTOR(xType, zType, functions::transform::TransformAny,
