@@ -50,6 +50,14 @@ import java.util.List;
 
 
 public class NDArray extends BaseNDArray {
+
+    @Override
+    public void clearOpaqueNDArray() {
+        if (opaqueNDArray != null) {
+            opaqueNDArray.close();
+            opaqueNDArray = null;
+        }
+    }
     static {
         //invoke the override
         Nd4j.getBlasWrapper();

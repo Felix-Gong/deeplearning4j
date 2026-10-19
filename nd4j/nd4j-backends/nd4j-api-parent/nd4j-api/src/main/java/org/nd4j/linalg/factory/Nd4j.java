@@ -2809,6 +2809,13 @@ public class Nd4j {
         getExecutioner().exec(new ReplaceNans(arr, Nd4j.EPS_THRESHOLD));
     }
 
+
+    /**
+     * Clears the TAD cache held by the native layer.
+     */
+    public static void clearTADCache() {
+        getNativeOps().clearTADCache();
+    }
     /**
      * Reverses the passed in matrix such that m[0] becomes m[m.length - 1] etc
      *
