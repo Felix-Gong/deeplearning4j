@@ -213,8 +213,15 @@ function(collect_all_sources out_source_list)
         file(GLOB_RECURSE MEMORY_SOURCES ./include/memory/*.cpp)
         file(GLOB_RECURSE CUSTOMOPS_HELPERS_IMPL_SOURCES ./include/ops/declarable/helpers/impl/*.cpp)
         file(GLOB_RECURSE CUSTOMOPS_HELPERS_CPU_SOURCES ./include/ops/declarable/helpers/cpu/*.cpp)
+        # summaryStatReductions.cpp duplicates summaryReductions.cpp (variance/
+        # standardDeviation) on RISC-V -> multiple definition at link
+        list(FILTER CUSTOMOPS_HELPERS_CPU_SOURCES EXCLUDE REGEX "/summaryStatReductions\.cpp$")
         file(GLOB_RECURSE HELPERS_SOURCES ./include/build_info.cpp ./include/ConstMessages.cpp ./include/helpers/*.cpp  ./include/helpers/cpu/*.cpp)
         file(GLOB_RECURSE LEGACY_SOURCES ./include/legacy/impl/*.cpp ./include/legacy/cpu/*.cpp)
+        # NativeOpsHelpers.cpp monolith duplicates the _Arrays/_Context/... split
+        # sources -> multiple definition at link on RISC-V
+        list(FILTER LEGACY_SOURCES EXCLUDE REGEX "/NativeOpsHelpers\.cpp$")
+        list(FILTER LEGACY_SOURCES EXCLUDE REGEX "/NativeOpExecutioner.cpp$")
         file(GLOB_RECURSE LOOPS_SOURCES ./include/loops/*.cpp)
 
         list(APPEND ALL_SOURCES_LIST
