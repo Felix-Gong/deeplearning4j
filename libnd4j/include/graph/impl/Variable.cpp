@@ -259,7 +259,7 @@ void Variable::setId(int id, int idx) {
 flatbuffers::Offset<::graph::FlatVariable> Variable::asFlatVariable(flatbuffers::FlatBufferBuilder &builder) {
   if (this->hasNDArray()) {
     auto array = this->getNDArray();
-    auto fShape = builder.CreateVector(array->getShapeInfoAsFlatVector());
+    auto fShape = builder.CreateVector(*array->getShapeInfoAsFlatVector());
 
     auto fBuffer = builder.CreateVector(array->asByteVector());
 

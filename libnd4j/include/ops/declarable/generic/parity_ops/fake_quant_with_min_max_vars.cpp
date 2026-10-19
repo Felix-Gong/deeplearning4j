@@ -43,8 +43,8 @@ CONFIGURABLE_OP_IMPL(fake_quant_with_min_max_vars, 1, 1, true, 0, 0) {
     min = INPUT_VARIABLE(1);
     max = INPUT_VARIABLE(2);
   } else if (block.getTArguments()->size() == 2) {
-    m = NDArrayFactory::create(x->dataType(), T_ARG(0), block.launchContext());
-    m2 = NDArrayFactory::create(x->dataType(), T_ARG(1), block.launchContext());
+    m = new NDArray(NDArrayFactory::create(x->dataType(), T_ARG(0), block.launchContext()));
+    m2 = new NDArray(NDArrayFactory::create(x->dataType(), T_ARG(1), block.launchContext()));
     min = m;
     max = m2;
   }

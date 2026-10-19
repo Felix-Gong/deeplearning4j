@@ -326,7 +326,7 @@ sd::graph::Node::Node(::graph::OpType opType, int opNum, int id, std::initialize
     for (auto v : iArgs) block->getIArguments()->emplace_back(v);
 
     for (auto v : tArgs) block->getTArguments()->emplace_back(v);
-    NDArray *_scalar = NDArrayFactory::create(0.0f);
+    NDArray *_scalar = NDArrayFactory::create_<float>(0.0f);
 
     this->setContextPrototype(block);
     this->setCustomOp(Node::buildOpByType(opType, (int)input.size(), (int)block->getIArguments()->size(),
@@ -454,7 +454,7 @@ sd::graph::Node::Node(const ::graph::FlatNode* node) {
           }
         }
 
-        NDArray *_scalar = NDArrayFactory::create(0.0f);
+        NDArray *_scalar = NDArrayFactory::create_<float>(0.0f);
         this->setContextPrototype(block);
         this->setCustomOp(Node::buildOpByType(_opType, (int)node->input()->size(), (int)block->getIArguments()->size(),
                                               (int)block->getTArguments()->size(), (int)_opNum, _scalar));
@@ -494,7 +494,7 @@ sd::graph::Node::Node(const ::graph::FlatNode* node) {
         }
 
         this->setContextPrototype(block);
-        NDArray *_scalar = NDArrayFactory::create(0.0f);
+        NDArray *_scalar = NDArrayFactory::create_<float>(0.0f);
 
         this->setCustomOp(Node::buildOpByType(_opType, (int)node->inputPaired()->size(),
                                               (int)block->getIArguments()->size(), (int)block->getTArguments()->size(),

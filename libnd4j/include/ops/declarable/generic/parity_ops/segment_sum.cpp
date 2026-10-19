@@ -35,8 +35,8 @@ CUSTOM_OP_IMPL(segment_sum, 2, 1, false, 0, 0) {
                "segment_sum: segment indexes array length should be equal to the input first dimension, but %i != %i.",
                idxSegments->lengthOf(), input->sizeAt(0));
 
-  auto expected = NDArrayFactory::create(input->dataType(), 0.f, block.launchContext());
-  auto wrong = NDArrayFactory::create(input->dataType(), 0.f, block.launchContext());
+  auto* expected = new NDArray(NDArrayFactory::create(input->dataType(), 0.f, block.launchContext()));
+  auto* wrong = new NDArray(NDArrayFactory::create(input->dataType(), 0.f, block.launchContext()));
 
   REQUIRE_TRUE(helpers::segmentIndicesValidate(block.launchContext(), idxSegments, *expected, *wrong), 0,
                "segment_sum: segment indices should be arranged, but %2.1f > %2.1f", expected->e<float>(0),

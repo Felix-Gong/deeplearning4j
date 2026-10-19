@@ -62,7 +62,7 @@ NDArray* scalarArrayOpHelper(NDArray* arr, T scalar, sd::scalar::Ops op, bool in
     THROW_EXCEPTION(errorMessage.c_str());
   }
 
-  auto tmp = NDArrayFactory::create(arr->dataType(), scalar, arr->getContext());
+  auto tmp = new NDArray(NDArrayFactory::create(arr->dataType(), scalar, arr->getContext()));
 
   if (inPlace && !arr->isView()) {
     NDArray::prepareSpecialUse({arr}, {arr, tmp});
@@ -342,7 +342,7 @@ void NDArray::operator+=(const T scalar) {
     THROW_EXCEPTION(errorMessage.c_str());
   }
 
-  auto tmp = NDArrayFactory::create(dataType(), scalar, getContext());
+  auto tmp = new NDArray(NDArrayFactory::create(dataType(), scalar, getContext()));
 
   NDArray::prepareSpecialUse({this}, {this, tmp});
   NativeOpExecutioner::execScalar(getContext(), sd::scalar::Add,
@@ -361,7 +361,7 @@ void NDArray::operator-=(const T scalar) {
     THROW_EXCEPTION(errorMessage.c_str());
   }
 
-  auto tmp = NDArrayFactory::create(dataType(), scalar, getContext());
+  auto tmp = new NDArray(NDArrayFactory::create(dataType(), scalar, getContext()));
 
   NDArray::prepareSpecialUse({this}, {this, tmp});
   NativeOpExecutioner::execScalar(getContext(), sd::scalar::Subtract,
@@ -380,7 +380,7 @@ void NDArray::operator*=(const T scalar) {
     THROW_EXCEPTION(errorMessage.c_str());
   }
 
-  auto tmp = NDArrayFactory::create(dataType(), scalar, getContext());
+  auto tmp = new NDArray(NDArrayFactory::create(dataType(), scalar, getContext()));
 
   NDArray::prepareSpecialUse({this}, {this, tmp});
   NativeOpExecutioner::execScalar(getContext(), sd::scalar::Multiply,
@@ -399,7 +399,7 @@ void NDArray::operator/=(const T scalar) {
     THROW_EXCEPTION(errorMessage.c_str());
   }
 
-  auto tmp = NDArrayFactory::create(dataType(), scalar, getContext());
+  auto tmp = new NDArray(NDArrayFactory::create(dataType(), scalar, getContext()));
 
   NDArray::prepareSpecialUse({this}, {this, tmp});
   NativeOpExecutioner::execScalar(getContext(), sd::scalar::Divide,

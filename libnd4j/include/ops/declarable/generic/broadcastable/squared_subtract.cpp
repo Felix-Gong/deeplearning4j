@@ -62,7 +62,7 @@ CUSTOM_OP_IMPL(squaredsubtract_bp, 3, 2, false, 0, 0) {
   auto gradY = OUTPUT_VARIABLE(1);
 
 
-  auto* ts = NDArrayFactory::create(x->dataType(), 2, block.launchContext());
+  auto* ts = new NDArray(NDArrayFactory::create(x->dataType(), 2, block.launchContext()));
 
   if (x->isSameShape(y)) {
     // PWT case case

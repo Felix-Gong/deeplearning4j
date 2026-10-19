@@ -93,18 +93,18 @@ CONFIGURABLE_OP_IMPL(cbow_inference, 6, 6, true, -2, -2) {
   lockedWordsSize->push_back(lockedWords->size());
   const std::vector<sd::LongType> *lockedWordsShape = lockedWordsSize;
 
-  auto indicesArrOne = indicesVec->size() > 0 ? NDArrayFactory::create_<sd::LongType>('c',*indicesShape,*indicesVec,LaunchContext::defaultContext()) : NDArrayFactory::empty<sd::LongType>();
+  auto indicesArrOne = indicesVec->size() > 0 ? NDArrayFactory::create_<sd::LongType>('c',*indicesShape,*indicesVec,LaunchContext::defaultContext()) : new NDArray(NDArrayFactory::empty<sd::LongType>());
   auto indicesArr = indicesArrOne;
-  auto codesArrOne = codesVec->size() > 0 ?  NDArrayFactory::create_<sd::LongType>('c',*codesShape,*codesVec,LaunchContext::defaultContext()) :  NDArrayFactory::empty<sd::LongType>();
+  auto codesArrOne = codesVec->size() > 0 ?  NDArrayFactory::create_<sd::LongType>('c',*codesShape,*codesVec,LaunchContext::defaultContext()) : new NDArray(NDArrayFactory::empty<sd::LongType>());
   auto codesArr = codesArrOne;
 
 
 
-  auto contextArrOne = context->size() > 0 ? NDArrayFactory::create_<sd::LongType>('c',*contextShape,*contextVec,LaunchContext::defaultContext()) : NDArrayFactory::empty<sd::LongType>();
+  auto contextArrOne = context->size() > 0 ? NDArrayFactory::create_<sd::LongType>('c',*contextShape,*contextVec,LaunchContext::defaultContext()) : new NDArray(NDArrayFactory::empty<sd::LongType>());
   auto contextArr =contextArrOne;
 
 
-  auto lockedWordsOne = lockedWordsVec->size() > 0 ?  NDArrayFactory::create_<sd::LongType>('c',*lockedWordsShape,*lockedWordsVec,LaunchContext::defaultContext()) : NDArrayFactory::empty<sd::LongType>();
+  auto lockedWordsOne = lockedWordsVec->size() > 0 ?  NDArrayFactory::create_<sd::LongType>('c',*lockedWordsShape,*lockedWordsVec,LaunchContext::defaultContext()) : new NDArray(NDArrayFactory::empty<sd::LongType>());
   auto lockedWordsArr = lockedWordsOne;
 
   auto target = I_ARG(currIdx++);
