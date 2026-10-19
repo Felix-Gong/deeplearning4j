@@ -251,8 +251,8 @@ public class NeuralNetConfiguration implements Serializable, Cloneable {
         protected List<LayerConstraint> weightConstraints;
         protected List<LayerConstraint> biasConstraints;
 
-        protected WorkspaceMode trainingWorkspaceMode = WorkspaceMode.ENABLED;
-        protected WorkspaceMode inferenceWorkspaceMode = WorkspaceMode.ENABLED;
+        protected WorkspaceMode trainingWorkspaceMode = WorkspaceMode.NONE;
+        protected WorkspaceMode inferenceWorkspaceMode = WorkspaceMode.NONE;
         protected boolean setTWM = false;
         protected boolean setIWM = false;
         protected CacheMode cacheMode = CacheMode.NONE;

@@ -61,6 +61,8 @@ public class CpuOpContext extends BaseOpContext implements OpContext, Deallocata
 
     private transient  long deallocationId;
 
+    private boolean closed = false;
+
 
     public CpuOpContext() {
         this.deallocationId = Nd4j.getDeallocatorService().pickObject(this);
@@ -244,7 +246,11 @@ public class CpuOpContext extends BaseOpContext implements OpContext, Deallocata
             // Use createFrom() which keeps parent array references and registers with DeallocatorService
             // Store in instance field to keep alive for duration of this OpContext
             inputArraysHolder = OpaqueNDArrayArr.createFrom(arrays);
-            nativeOps.setGraphContextInputArraysArr(context, arrays.size(), inputArraysHolder);
+            // NOTE: array-based JNI binding derefs the PointerPointer one level too many on riscv64;
+            // per-element setter passes each OpaqueNDArray directly (verified fix 0066).
+            for (int i = 0; i < arrays.size(); i++) {
+                nativeOps.setGraphContextInputArray(context, i, OpaqueNDArray.fromINDArray(arrays.get(i)));
+            }
         }
     }
 
@@ -262,7 +268,9 @@ public class CpuOpContext extends BaseOpContext implements OpContext, Deallocata
             // Use createFrom() which keeps parent array references and registers with DeallocatorService
             // Store in instance field to keep alive for duration of this OpContext
             outputArraysHolder = OpaqueNDArrayArr.createFrom(arrays);
-            nativeOps.setGraphContextOutputArraysArr(context, arrays.size(), outputArraysHolder);
+            for (int i = 0; i < arrays.size(); i++) {
+                nativeOps.setGraphContextOutputArray(context, i, OpaqueNDArray.fromINDArray(arrays.get(i)));
+            }
         }
     }
 
