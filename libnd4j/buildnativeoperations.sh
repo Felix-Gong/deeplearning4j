@@ -499,11 +499,25 @@ fi
 
 [[ -z ${MAKEJ:-} ]] && MAKEJ=4
 
+# RISC-V memory guard: cap parallelism so cc1plus-heavy template
+# instantiations stay well under the container memory limit.
+# External invokers may set MAKEJ high (javacpp defaults to nproc);
+# cap to the configured DL4J_MAKE_JOBS or a safe 4 here.
+SAFE_JOBS="${DL4J_MAKE_JOBS:-4}"
+if [ "$MAKEJ" -gt "$SAFE_JOBS" ] 2>/dev/null; then
+    MAKEJ="$SAFE_JOBS"
+fi
+
 # Add load average limiting to prevent memory exhaustion
 # -l flag: only start new job if load average < limit
 # Load limit = 75% of available cores (24 for 32 cores)
 LOAD_LIMIT=$(($(nproc) * 3 / 4))
-export MAKE_COMMAND="make -j${MAKEJ} -l${LOAD_LIMIT}"
+# RISC-V memory guard: javacpp injects MAKEJ/MAKEFLAGS=nproc (16) which
+# exhausts RAM on massive template instantiations. Force 4 regardless.
+export SDL_MAKE_JOBS_CAP=4
+unset MAKEFLAGS
+unset MAKEJ
+export MAKE_COMMAND="make -j${SDL_MAKE_JOBS_CAP:-4} -l${LOAD_LIMIT}"
 export MAKE_ARGUMENTS=
 echo eval $CMAKE_COMMAND
 
@@ -982,6 +996,11 @@ case "$OS" in
             export CMAKE_COMMAND="$CMAKE_COMMAND -D CMAKE_TOOLCHAIN_FILE=cmake/rpi.cmake"
         fi
         export CMAKE_COMMAND="$CMAKE_COMMAND -DSD_ARM_BUILD=true"
+        ;;
+    linux-riscv64)
+        if [ -z "$ARCH" ]; then
+            ARCH="riscv64"
+        fi
         ;;
     android-arm)
         if [ -z "$ARCH" ]; then
@@ -1909,7 +1928,7 @@ ORIGINAL_DIR=$(pwd)
 # cd to the script directory for the operations that need to be performed there
 cd "$SCRIPT_DIR"
 
-if [ "$GENERATE_FLATC" == "ON" ]; then
+if [ "${GENERATE_FLATC:-OFF}" == "ON" ]; then
     echo "Copying flatc generated for java"
     # ensure proper flatc sources are in place
     bash "$LIBND4J_DIR/copy-flatc-java.sh"
