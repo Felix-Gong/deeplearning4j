@@ -32,7 +32,7 @@
 #define CBLAS_H
 #endif
 
-#ifdef HAVE_OPENBLAS
+#if defined(HAVE_OPENBLAS) && HAVE_OPENBLAS
 // include CBLAS from OpenBLAS
 #ifdef __GNUC__
 #include <cblas.h>

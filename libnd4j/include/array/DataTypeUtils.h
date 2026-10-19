@@ -382,6 +382,7 @@ SD_INLINE SD_HOST_DEVICE LongType DataTypeUtils::min_positive<LongType>() {
   return (LongType)0;
 }
 
+#ifndef __LP64__
 template <>
 SD_INLINE SD_HOST_DEVICE long DataTypeUtils::min<long>() {
   return std::numeric_limits<long>::min();
@@ -391,6 +392,7 @@ template <>
 SD_INLINE SD_HOST_DEVICE long DataTypeUtils::min_positive<long>() {
   return 0L;
 }
+#endif
 #endif
 
 #ifdef HAS_INT8
