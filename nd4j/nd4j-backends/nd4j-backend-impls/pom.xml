@@ -58,6 +58,7 @@
         <javacpp.platform.ios-x86_64>ios-x86_64${javacpp.platform.extension}</javacpp.platform.ios-x86_64>
         <javacpp.platform.linux-armhf>linux-armhf${javacpp.platform.extension}</javacpp.platform.linux-armhf>
         <javacpp.platform.linux-arm64>linux-arm64${javacpp.platform.extension}</javacpp.platform.linux-arm64>
+        <javacpp.platform.linux-riscv64>linux-riscv64${javacpp.platform.extension}</javacpp.platform.linux-riscv64>
         <javacpp.platform.linux-ppc64le>linux-ppc64le${javacpp.platform.extension}</javacpp.platform.linux-ppc64le>
         <javacpp.platform.linux-x86>linux-x86${javacpp.platform.extension}</javacpp.platform.linux-x86>
         <javacpp.platform.linux-x86_64>linux-x86_64${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
@@ -167,7 +168,6 @@
                <activeByDefault>false</activeByDefault>
            </activation>
             <modules>
-                <module>../../../libnd4j</module>
                 <module>nd4j-native</module>
                 <module>nd4j-native-preset</module>
                 <module>nd4j-native-platform</module>
@@ -182,7 +182,6 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
             <modules>
-                <module>../../../libnd4j</module>
                 <module>nd4j-cuda</module>
                 <module>nd4j-cuda-preset</module>
                 <module>nd4j-cuda-platform</module>
@@ -231,6 +230,7 @@
                 <javacpp.platform.ios-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.ios-x86_64>
                 <javacpp.platform.linux-armhf>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-armhf>
                 <javacpp.platform.linux-arm64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-arm64>
+                <javacpp.platform.linux-riscv64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-riscv64>
                 <javacpp.platform.linux-ppc64le>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-ppc64le>
                 <javacpp.platform.linux-x86>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86>
                 <javacpp.platform.linux-x86_64>${javacpp.platform}${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
@@ -261,6 +261,7 @@
                 <javacpp.platform.ios-x86_64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.ios-x86_64>
                 <javacpp.platform.linux-armhf>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-armhf>
                 <javacpp.platform.linux-arm64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-arm64>
+                <javacpp.platform.linux-riscv64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-riscv64>
                 <javacpp.platform.linux-ppc64le>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-ppc64le>
                 <javacpp.platform.linux-x86>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-x86>
                 <javacpp.platform.linux-x86_64>${os.name}-${os.arch}${javacpp.platform.extension}</javacpp.platform.linux-x86_64>
@@ -291,6 +292,7 @@
                 <javacpp.platform.ios-x86_64></javacpp.platform.ios-x86_64>
                 <javacpp.platform.linux-armhf></javacpp.platform.linux-armhf>
                 <javacpp.platform.linux-arm64></javacpp.platform.linux-arm64>
+                <javacpp.platform.linux-riscv64></javacpp.platform.linux-riscv64>
                 <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
                 <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
                 <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
@@ -321,6 +323,7 @@
                 <javacpp.platform.ios-x86_64></javacpp.platform.ios-x86_64>
                 <javacpp.platform.linux-armhf></javacpp.platform.linux-armhf>
                 <javacpp.platform.linux-arm64></javacpp.platform.linux-arm64>
+                <javacpp.platform.linux-riscv64></javacpp.platform.linux-riscv64>
                 <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
                 <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
                 <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
@@ -459,6 +462,21 @@
             </properties>
         </profile>
         <profile>
+            <id>linux-riscv64-default</id>
+            <activation>
+                <property>
+                    <name>javacpp.platform</name>
+                    <value>linux-riscv64</value>
+                </property>
+            </activation>
+            <properties>
+                <javacpp.platform.properties>linux-riscv64</javacpp.platform.properties>
+                <javacpp.platform.compiler>g++</javacpp.platform.compiler>
+                <cpp.compiler.flags>-std=c++17</cpp.compiler.flags>
+                <dependency.platform2></dependency.platform2>
+            </properties>
+        </profile>
+        <profile>
             <id>linux-ppc64le-default</id>
             <activation>
                 <property>
@@ -491,6 +509,7 @@
                 <javacpp.platform.ios-x86_64></javacpp.platform.ios-x86_64>
                 <javacpp.platform.linux-armhf></javacpp.platform.linux-armhf>
                 <javacpp.platform.linux-arm64></javacpp.platform.linux-arm64>
+                <javacpp.platform.linux-riscv64></javacpp.platform.linux-riscv64>
                 <javacpp.platform.linux-ppc64le></javacpp.platform.linux-ppc64le>
                 <javacpp.platform.linux-x86></javacpp.platform.linux-x86>
                 <javacpp.platform.linux-x86_64></javacpp.platform.linux-x86_64>
@@ -618,6 +637,17 @@
             </properties>
         </profile>
         <profile>
+            <id>javacpp.platform.linux-riscv64-true</id>
+            <activation>
+                <property>
+                    <name>javacpp.platform.linux-riscv64</name>
+                </property>
+            </activation>
+            <properties>
+                <javacpp.platform.linux-riscv64>linux-riscv64${javacpp.platform.extension}</javacpp.platform.linux-riscv64>
+            </properties>
+        </profile>
+        <profile>
             <id>javacpp.platform.linux-ppc64le-true</id>
             <activation>
                 <property>
@@ -726,6 +756,21 @@
             </activation>
             <properties>
                 <javacpp.platform.linux-arm64>linux-arm64${javacpp.platform.extension}</javacpp.platform.linux-arm64>
+            </properties>
+        </profile>
+        <profile>
+            <id>javacpp.platform.custom-linux-riscv64</id>
+            <activation>
+                <property>
+                    <name>javacpp.platform.host</name>
+                </property>
+                <os>
+                    <name>linux</name>
+                    <arch>riscv64</arch>
+                </os>
+            </activation>
+            <properties>
+                <javacpp.platform.linux-riscv64>linux-riscv64${javacpp.platform.extension}</javacpp.platform.linux-riscv64>
             </properties>
         </profile>
         <profile>
