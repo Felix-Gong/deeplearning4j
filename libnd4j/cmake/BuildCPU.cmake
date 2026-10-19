@@ -16,10 +16,20 @@ file(GLOB_RECURSE GRAPH_SOURCES ./include/graph/*.cpp ./include/graph/*.h)
 file(GLOB_RECURSE CUSTOMOPS_SOURCES ./include/ops/declarable/generic/*.cpp)
 file(GLOB_RECURSE CUSTOMOPS_HELPERS_IMPL_SOURCES ./include/ops/declarable/helpers/impl/*.cpp)
 file(GLOB_RECURSE CUSTOMOPS_HELPERS_CPU_SOURCES ./include/ops/declarable/helpers/cpu/*.cpp)
+# duplicate of summaryReductions.cpp (both define sd::ops::helpers::variance and
+# standardDeviation); keeping both yields link errors on RISC-V
+list(FILTER CUSTOMOPS_HELPERS_CPU_SOURCES EXCLUDE REGEX "/summaryStatReductions\.cpp$")
 file(GLOB_RECURSE OPS_SOURCES ./include/ops/impl/*.cpp ./include/ops/declarable/impl/*.cpp ./include/ops/*.h)
 file(GLOB_RECURSE INDEXING_SOURCES ./include/indexing/*.cpp ./include/indexing/*.h)
 file(GLOB_RECURSE HELPERS_SOURCES ./include/build_info.cpp ./include/ConstMessages.cpp ./include/helpers/*.cpp  ./include/helpers/cpu/*.cpp ./include/helpers/*.h)
 file(GLOB_RECURSE LEGACY_SOURCES ./include/legacy/impl/*.cpp ./include/legacy/cpu/*.cpp ./include/legacy/*.h)
+# dl4j 4c22ac5 split NativeOpsHelpers.cpp into _Arrays/_Context/_DataBuffers/
+# _LifecycleTracking/_NumpyInterop/_Sanitizers/_TypeConversions; the monolith
+# still exists and defines the same symbols -> multiple definition at link on
+# RISC-V (where javacpp GLOBs every legacy/impl/*.cpp).  Drop the monolith;
+# the split files collectively cover every function and carry the TLS
+# OpExecutionLogger::_currentOpName definition (0059).
+list(FILTER LEGACY_SOURCES EXCLUDE REGEX "/NativeOpsHelpers\.cpp$")
 file(GLOB_RECURSE LOOPS_SOURCES ./include/loops/*.cpp ./include/loops/*.h)
 
 set(ALL_SOURCES "")
