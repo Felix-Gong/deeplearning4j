@@ -353,7 +353,12 @@ public class DeallocatorService {
             boolean canRun = true;
             while (canRun) {
                 while(blockDeallocator.get()) {
-                    Thread.sleep(1000);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        canRun = false;
+                        break;
+                    }
                 }
                 // if periodicGc is enabled, only first thread will call for it
                 if (threadIdx == 0 && Nd4j.getMemoryManager().getAutoGcWindow() > 0) {
