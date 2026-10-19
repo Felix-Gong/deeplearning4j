@@ -42,8 +42,8 @@ public abstract class BaseBuilder {
     protected int tbpttBackLength = DEFAULT_TBPTT_LENGTH;
     protected InputType inputType;
 
-    protected WorkspaceMode trainingWorkspaceMode = WorkspaceMode.ENABLED;
-    protected WorkspaceMode inferenceWorkspaceMode = WorkspaceMode.ENABLED;
+    protected WorkspaceMode trainingWorkspaceMode = WorkspaceMode.NONE;
+    protected WorkspaceMode inferenceWorkspaceMode = WorkspaceMode.NONE;
     protected CacheMode cacheMode = CacheMode.NONE;
     protected boolean validateOutputConfig = true;
     protected boolean validateTbpttConfig = true;
