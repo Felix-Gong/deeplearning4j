@@ -164,6 +164,11 @@ endif()
 # Substitute TYPE_DEFINES
 string(REPLACE "@TYPE_DEFINES@" "${TYPE_DEFINES}" CONFIG_H_CONTENT "${CONFIG_H_CONTENT}")
 
+# Fix any residual #cmakedefine lines: variables are already substituted to literal
+# values above, so convert the remaining #cmakedefine prefix to #define.
+string(REGEX REPLACE "#cmakedefine ([A-Za-z0-9_]+)" "#define \\1" CONFIG_H_CONTENT "${CONFIG_H_CONTENT}")
+
+
 # Write config.h only if content changed (preserves mtime for PCH)
 _postbuild_write_if_different("${CONFIG_H_OUT}" "${CONFIG_H_CONTENT}")
 
@@ -206,7 +211,17 @@ if(SD_PREPROCESS)
 
     # Build FlatBuffers for preprocessing (minimal build, just need headers)
     set(PREPROCESS_FLATBUFFERS_VERSION "25.2.10")
-    set(PREPROCESS_FLATBUFFERS_URL "https://github.com/google/flatbuffers/archive/v${PREPROCESS_FLATBUFFERS_VERSION}.tar.gz")
+    if(DEFINED ENV{GH_MIRROR} AND NOT "$ENV{GH_MIRROR}" STREQUAL "")
+
+        set(GH_MIRROR_FB_BASE "$ENV{GH_MIRROR}")
+
+    else()
+
+        set(GH_MIRROR_FB_BASE "https://github.com")
+
+    endif()
+
+    set(PREPROCESS_FLATBUFFERS_URL "${GH_MIRROR_FB_BASE}/google/flatbuffers/archive/v${PREPROCESS_FLATBUFFERS_VERSION}.tar.gz")
     set(PREPROCESS_FB_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/preprocess-flatbuffers-src")
     set(PREPROCESS_FB_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/preprocess-flatbuffers-build")
 
