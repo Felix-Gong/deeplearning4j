@@ -357,6 +357,79 @@
                 </os>
             </activation>
         </profile>
+        <profile>
+            <!-- See: https://github.com/os72/protoc-jar/issues/93 We need to use a system compiled protoc since one is not provided
+            by the plugin for RISC-V. -->
+            <id>riscv64-protoc</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.os72</groupId>
+                        <artifactId>protoc-jar-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>tensorflow</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <protocVersion>${google.protobuf.version}</protocVersion>
+                                    <extension>.proto</extension>
+                                    <includeDirectories>
+                                        <include>src/main/protobuf/tf</include>
+                                        <include>src/main/protobuf/onnx</include>
+                                        <include>src/main/protobuf/nd4j</include>
+                                    </includeDirectories>
+                                    <inputDirectories>
+                                        <include>src/main/protobuf/tf/tensorflow</include>
+                                        <include>src/main/protobuf/onnx</include>
+                                        <include>src/main/protobuf/nd4j</include>
+                                    </inputDirectories>
+                                    <addSources>main</addSources>
+                                    <cleanOutputFolder>false</cleanOutputFolder>
+                                    <outputDirectory>src/main/java/</outputDirectory>
+                                    <protocCommand>protoc</protocCommand> <!-- install protobuf compiler for RISC-V -->
+                                </configuration>
+                            </execution>
+
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>replacer</artifactId>
+                        <version>${maven-replacer-plugin.version}</version>
+                        <configuration>
+                            <includes>
+                                <include>${project.build.sourceDirectory}/org/tensorflow/**</include>
+                                <include>${project.build.sourceDirectory}/tensorflow/**</include>
+                                <include>${project.build.sourceDirectory}/onnx/**</include>
+                                <include>${project.build.sourceDirectory}/org/nd4j/ir/**</include>
+                            </includes>
+                            <token>com.google.protobuf.</token>
+                            <value>org.nd4j.shade.protobuf.</value>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>replace-imports</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+            <activation>
+                <os>
+                    <name>linux</name>
+                    <arch>riscv64</arch>
+                </os>
+            </activation>
+        </profile>
     </profiles>
 
     <build>
