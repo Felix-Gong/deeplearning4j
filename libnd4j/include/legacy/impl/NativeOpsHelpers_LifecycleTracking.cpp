@@ -1540,3 +1540,12 @@ SD_LIB_EXPORT void updateAllocationJavaStackTrace(OpaqueNDArray array, const cha
     }
 #endif
 }
+
+// RISC-V: OpExecutionLogger declares `static thread_local std::string _currentOpName`
+// in its header; it must have exactly one definition in a TU for the TLS symbol
+// (ld "undefined reference to TLS init function") to resolve.
+namespace sd {
+namespace ops {
+thread_local std::string OpExecutionLogger::_currentOpName;
+}
+}

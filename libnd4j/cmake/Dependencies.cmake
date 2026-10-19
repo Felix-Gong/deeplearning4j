@@ -158,7 +158,17 @@ endfunction()
 # =============================================================================
 function(setup_flatbuffers)
     set(FLATBUFFERS_VERSION "25.2.10")
-    set(FLATBUFFERS_URL "https://github.com/google/flatbuffers/archive/v${FLATBUFFERS_VERSION}.tar.gz")
+    if(DEFINED ENV{GH_MIRROR} AND NOT "$ENV{GH_MIRROR}" STREQUAL "")
+
+        set(GH_MIRROR_FB_BASE "$ENV{GH_MIRROR}")
+
+    else()
+
+        set(GH_MIRROR_FB_BASE "https://github.com")
+
+    endif()
+
+    set(FLATBUFFERS_URL "${GH_MIRROR_FB_BASE}/google/flatbuffers/archive/v${FLATBUFFERS_VERSION}.tar.gz")
 
     # Determine if we should build flatc
     set(SHOULD_BUILD_FLATC FALSE)

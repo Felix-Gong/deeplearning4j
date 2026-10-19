@@ -73,7 +73,7 @@ class BroadcastHelper {
         return z;
       } else {
         auto v = y->getShapeAsVector();
-        auto tZ = NDArrayFactory::valueOf(v, y, y->ordering());
+        auto tZ = NDArrayFactory::valueOf(*v, *y, y->ordering());
         tZ->applyPairwiseTransform(op.p, y, extraArgs);
         return tZ;
       }
@@ -122,7 +122,7 @@ class BroadcastHelper {
         return z;
       } else {
         auto v = y->getShapeAsVector();
-        auto tZ = NDArrayFactory::valueOf(v, y, y->ordering());
+        auto tZ = NDArrayFactory::valueOf(*v, *y, y->ordering());
         return tZ;
       }
     } else if (x->isScalar() && y->isScalar()) {  // x->isScalar() && y->isScalar()

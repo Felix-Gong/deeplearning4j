@@ -1174,9 +1174,15 @@ SD_LIB_HIDDEN void TransformLoops<X, Z, E>::loopTransform(const X* x,
         result = OpType::op(x[xOffset], static_cast<Z*>(nullptr));
       }
     }
-    // For same-type transformations, use input type
+    // For same-type transformations, use input type. Pass extraParams when
+    // they match the element type — ops like CompareAndSetTransform read
+    // params[0..3] and previously crashed on the unconditional nullptr.
     else if constexpr (std::is_same_v<X, Z>) {
-      result = OpType::op(x[xOffset], static_cast<X*>(nullptr));
+      if constexpr (std::is_same_v<E, X>) {
+        result = OpType::op(x[xOffset], extraParams);
+      } else {
+        result = OpType::op(x[xOffset], static_cast<X*>(nullptr));
+      }
     }
     // Default: try with extraParams if types match, otherwise check for operations that expect Z*
     else {

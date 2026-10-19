@@ -635,8 +635,8 @@ static sd::Status computeSpans(IKernelFunc<float>* kernel, sd::LongType const ou
   float const kernelScale = antialias ? math::sd_max(invScale, 1.f) : 1.f;
   spans._spanSize =
       math::sd_min(2 * static_cast<int>(std::ceil(kernel->radius() * kernelScale)) + 1, static_cast<int>(inSize));
-  auto starts = NDArrayFactory::create<int>('c', {outSize});
-  auto weights = NDArrayFactory::create<float>('c', {outSize, spans._spanSize});
+  auto *starts = new NDArray(NDArrayFactory::create<int>('c', {outSize}));
+  auto *weights = new NDArray(NDArrayFactory::create<float>('c', {outSize, spans._spanSize}));
   spans._starts = starts;
   spans._weights = weights;
 
@@ -751,7 +751,7 @@ static sd::Status resizeKernel(IKernelFunc<float>* transformationKernel, NDArray
   Spans rowSpans;
   res = computeSpans(transformationKernel, outHeight, inputHeight, rowScale, 0.f, antialias, rowSpans);
 
-  NDArray *intermediate = NDArrayFactory::create<Z>('c', {batchSize, outHeight, inputWidth, channels});
+  NDArray *intermediate = new NDArray(NDArrayFactory::create<Z>('c', {batchSize, outHeight, inputWidth, channels}));
 
   // const functor::Spans& const_row_spans = row_spans;
   // typename TTypes<int32, 1>::ConstTensor row_starts(

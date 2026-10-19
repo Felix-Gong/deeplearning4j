@@ -2113,7 +2113,7 @@ void NDArray::assign(NDArray *other, bool allowParallelism) {
 template <typename T, typename>
 void NDArray::assign(T &value, bool allowParallelism) {
   // just fire scalar
-  auto temp = NDArrayFactory::create(dataType(), value, this->getContext());
+  auto temp = new NDArray(NDArrayFactory::create(dataType(), value, this->getContext()));
 
   prepareUse(std::vector<NDArray *>{this}, std::vector<NDArray *>{temp});
   NativeOpExecutioner::execScalar(getContext(), sd::scalar::CopyPws, buffer(), shapeInfo(), specialBuffer(),
@@ -2579,7 +2579,7 @@ void NDArray::reduceNumber(sd::reduce::LongOps op, NDArray *target, void *extraP
 NDArray *NDArray::indexReduceNumber(sd::indexreduce::Ops op, ExtraArguments *extraParams) {
   if (isS()) THROW_EXCEPTION("NDArray::indexReduceNumber: you can't use this method on String array!");
 
-  auto res = NDArrayFactory::create<sd::LongType>(0);
+  auto res = new NDArray(NDArrayFactory::create<sd::LongType>(0));
 
   prepareUse({res}, {this});
   NativeOpExecutioner::execIndexReduceScalar(
@@ -5159,7 +5159,7 @@ void NDArray::applyScalarArr(sd::scalar::IntOps op, NDArray *scalar, NDArray *ta
 ////////////////////////////////////////////////////////////////////////
 template <typename T>
 void NDArray::applyScalar(sd::scalar::IntOps op, const T scalar, NDArray *target, ExtraArguments *extraParams)  {
-  NDArray *scalarArr = NDArrayFactory::create(this->dataType(), scalar, getContext());
+  NDArray *scalarArr = new NDArray(NDArrayFactory::create(this->dataType(), scalar, getContext()));
   applyScalarArr(op, scalarArr, target, extraParams);
   delete scalarArr;
 }
@@ -5210,7 +5210,7 @@ template SD_LIB_EXPORT void NDArray::applyScalar<bool>(sd::scalar::IntOps op,  b
 ////////////////////////////////////////////////////////////////////////
 template <typename T>
 void NDArray::applyScalar(sd::scalar::Ops op, const T scalar, NDArray *target, ExtraArguments *extraParams) {
-  auto scalarArr = NDArrayFactory::create<T>(dataType(), scalar, this->getContext());
+  auto scalarArr = new NDArray(NDArrayFactory::create<T>(dataType(), scalar, this->getContext()));
   applyScalarArr(op, scalarArr, target, extraParams);
   delete scalarArr;
 }
@@ -5263,7 +5263,7 @@ template SD_LIB_EXPORT void NDArray::applyScalar(sd::scalar::Ops op, const bool 
 ////////////////////////////////////////////////////////////////////////
 template <typename T>
 void NDArray::applyScalar(sd::scalar::BoolOps op, const T scalar, NDArray *target, ExtraArguments *extraParams)  {
-  NDArray *scalarArr = NDArrayFactory::create<T>(dataType(), scalar, getContext());
+  NDArray *scalarArr = new NDArray(NDArrayFactory::create<T>(dataType(), scalar, getContext()));
   applyScalarArr(op, scalarArr, target, extraParams);
   delete scalarArr;
 }

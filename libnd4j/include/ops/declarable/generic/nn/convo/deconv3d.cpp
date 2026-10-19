@@ -298,8 +298,8 @@ CUSTOM_OP_IMPL(deconv3d_bp, 3, 2, false, 0, 13) {
     gradWAxes = {0, 4, 1, 2, 3};
 
   // ----- calculation of gradW ----- //
-  auto columns = NDArrayFactory::create(input->ordering(), {bS, oC, kD, kH, kW, iD, iH, iW}, input->dataType(),
-                                        block.launchContext());
+  auto* columns = new NDArray(NDArrayFactory::create(input->ordering(), {bS, oC, kD, kH, kW, iD, iH, iW}, input->dataType(),
+                                                  block.launchContext()));
   ConvolutionUtils::vol2col(block, gradO, columns, sD, sH, sW, pD, pH, pW, dD, dH,
                             dW);  // [bS, oC, oD, oH, oW] is deconvoluted to [bS, oC, kD, kH, kW, iD, iH, iW]
 

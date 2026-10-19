@@ -76,11 +76,11 @@ public class ComputationGraphConfiguration implements Serializable, Cloneable {
 
     @Getter
     @Setter
-    protected WorkspaceMode trainingWorkspaceMode = WorkspaceMode.ENABLED;
+    protected WorkspaceMode trainingWorkspaceMode = WorkspaceMode.NONE;
 
     @Getter
     @Setter
-    protected WorkspaceMode inferenceWorkspaceMode = WorkspaceMode.ENABLED;
+    protected WorkspaceMode inferenceWorkspaceMode = WorkspaceMode.NONE;
 
     @Getter
     @Setter

@@ -21,6 +21,7 @@
 package org.deeplearning4j.nn.conf.layers;
 
 import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -56,6 +57,7 @@ import java.util.Map;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Builder
 public class BatchNormalization extends FeedForwardLayer {
 

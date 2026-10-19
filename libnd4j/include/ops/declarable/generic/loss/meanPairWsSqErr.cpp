@@ -468,7 +468,7 @@ CUSTOM_OP_IMPL(mean_pairwssqerr_loss_grad, 3, 3, false, 0, 1) {
         *dLdw = 0.;
       } else {
         auto* numOfNonZeroWeightsScalar =
-            NDArrayFactory::create(dLdw->dataType(), numOfNonZeroWeights, block.launchContext());
+            new NDArray(NDArrayFactory::create(dLdw->dataType(), numOfNonZeroWeights, block.launchContext()));
 
         if (weights->isScalar()) {
           NDArray* eSum = E.reduceNumber(reduce::Sum);

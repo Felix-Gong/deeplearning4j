@@ -69,7 +69,7 @@ TEST_F(VariableTests, Test_FlatVariableDataType_1) {
 
   auto vec = original.asByteVector();
 
-  auto fShape = builder.CreateVector(original.getShapeInfoAsFlatVector());
+  auto fShape = builder.CreateVector(*original.getShapeInfoAsFlatVector());
   auto fBuffer = builder.CreateVector(vec);
   auto fVid = CreateIntPair(builder, 1, 12);
 
@@ -103,7 +103,7 @@ TEST_F(VariableTests, Test_FlatVariableDataType_2) {
 
   auto vec = original.asByteVector();
 
-  auto fShape = builder.CreateVector(original.getShapeInfoAsFlatVector());
+  auto fShape = builder.CreateVector(*original.getShapeInfoAsFlatVector());
   auto fBuffer = builder.CreateVector(vec);
   auto fVid = CreateIntPair(builder, 1, 12);
 
@@ -139,7 +139,7 @@ TEST_F(VariableTests, Test_FlatVariableDataType_3) {
 
   auto vec = original.asByteVector();
 
-  auto fShape = builder.CreateVector(original.getShapeInfoAsFlatVector());
+  auto fShape = builder.CreateVector(*original.getShapeInfoAsFlatVector());
   auto fBuffer = builder.CreateVector(vec);
   auto fVid = CreateIntPair(builder, 1, 12);
 

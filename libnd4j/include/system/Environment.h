@@ -67,6 +67,13 @@ class SD_LIB_EXPORT Environment {
 
   std::atomic<int> _maxThreads;
   std::atomic<int> _maxMasterThreads;
+  std::atomic<bool> _serializeBlasCallsSet{false};
+  std::atomic<int> _openBlasThreads{0};
+  std::atomic<bool> _ndArrayTracking{false};
+  std::atomic<bool> _dataBufferTracking{false};
+  std::atomic<bool> _tadCacheTracking{false};
+  std::atomic<bool> _shapeCacheTracking{false};
+  std::atomic<bool> _opContextTracking{false};
   std::atomic<bool> deleteSpecial{true};
   std::atomic<bool> deletePrimary{true};
   std::atomic<bool> deleteShapeInfo{true};
@@ -222,6 +229,20 @@ class SD_LIB_EXPORT Environment {
 
   int maxMasterThreads();
   void setMaxMasterThreads(int max);
+  bool isSerializeBlasCalls();
+  void setSerializeBlasCalls(bool serialize);
+  int getOpenBlasThreads();
+  void setOpenBlasThreads(int threads);
+  bool isNDArrayTracking();
+  void setNDArrayTracking(bool enabled);
+  bool isDataBufferTracking();
+  void setDataBufferTracking(bool enabled);
+  bool isTADCacheTracking();
+  void setTADCacheTracking(bool enabled);
+  bool isShapeCacheTracking();
+  void setShapeCacheTracking(bool enabled);
+  bool isOpContextTracking();
+  void setOpContextTracking(bool enabled);
 
   /*
    * Legacy memory limits API, still used in new API as simplified version

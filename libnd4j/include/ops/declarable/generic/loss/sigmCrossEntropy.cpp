@@ -195,7 +195,7 @@ CUSTOM_OP_IMPL(sigm_cross_entropy_loss_grad, 3, 3, false, 1, 1) {
   auto dLdw = OUTPUT_VARIABLE(1);  // dL/dweights
   auto dLdl = OUTPUT_VARIABLE(2);  // dL/dlabels
 
-  NDArray *labelsSmoothing = NDArrayFactory::create(logits->dataType(), T_ARG(0), block.launchContext());
+  NDArray *labelsSmoothing = NDArrayFactory::create_<float>(T_ARG(0), block.launchContext());
 
   int reductionMode =
       INT_ARG(0);  // 0 - "none"; 1 - "weighted_sum";  2 - "weighted_mean";  3 - "weighted_sum_by_nonzero_weights"
@@ -350,8 +350,8 @@ CUSTOM_OP_IMPL(sigm_cross_entropy_loss_grad, 3, 3, false, 1, 1) {
         *dLdl = 0.;
         *dLdw = 0.;
       } else {
-        auto numOfNonZeroWeightsScalar =
-            NDArrayFactory::create(dLdw->dataType(), numOfNonZeroWeights, block.launchContext());
+        auto* numOfNonZeroWeightsScalar =
+            new NDArray(NDArrayFactory::create(dLdw->dataType(), numOfNonZeroWeights, block.launchContext()));
 
         if (weights->isScalar()) {
           auto* sumE = E.reduceNumber(reduce::Sum);

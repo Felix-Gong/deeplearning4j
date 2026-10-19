@@ -186,7 +186,7 @@ static NDArray lup_(LaunchContext* context, NDArray* input, NDArray* compound, N
   }
   if (compound != nullptr) compound->assign(&compoundMatrix);
   if (permutation != nullptr) {
-    auto permutaionVector = NDArrayFactory::create('c', {rowNum}, DataTypeUtils::fromT<I>(), input->getContext());
+    auto* permutaionVector = new NDArray(NDArrayFactory::create('c', {rowNum}, DataTypeUtils::fromT<I>(), input->getContext()));
     for (auto i = 0; i < rowNum; i++) {
       for (auto j = 0; j < columnNum; j++) {
         if (permutationMatrix.t<T>(i, j) != 0) {
@@ -199,6 +199,7 @@ static NDArray lup_(LaunchContext* context, NDArray* input, NDArray* compound, N
     else if (permutation->isSameShape(permutaionVector)) {
       permutation->assign(permutaionVector);
     }
+    delete permutaionVector;
   }
   return determinant;  // FIXED: Return stack-allocated object instead of dereferencing pointer
 }
@@ -365,20 +366,22 @@ static sd::Status determinant_(LaunchContext* context, NDArray* input, NDArray* 
   sd::LongType n = input->sizeAt(-1);
   sd::LongType n2 = n * n;
 
-  auto matrix =
-      NDArrayFactory::create(input->ordering(), {n, n}, input->dataType(), context);  //, block.getWorkspace());
+  auto* matrix =
+      new NDArray(NDArrayFactory::create(input->ordering(), {n, n}, input->dataType(), context));  //, block.getWorkspace());
 
   for (sd::LongType e = 0; e < output->lengthOf(); e++) {
     for (sd::LongType k = e * n2, row = 0; k < (e + 1) * n2; ++k, ++row) matrix->p(row, input->e<T>(k));
     auto ret = lup_<T, sd::LongType>(context, matrix, (NDArray*)nullptr, (NDArray*)nullptr);
     output->p(e, &ret);
   }
+  delete matrix;
 
   return sd::Status::OK;
 }
 
 sd::Status determinant(sd::LaunchContext* context, NDArray* input, NDArray* output) {
   BUILD_SINGLE_SELECTOR(input->dataType(), return determinant_, (context, input, output), SD_FLOAT_TYPES);
+  return sd::Status::BAD_PARAMS;
 }
 
 template <typename T>
@@ -387,7 +390,7 @@ sd::Status logAbsDeterminant_(LaunchContext* context, NDArray* input, NDArray* o
   sd::LongType n2 = n * n;
 
   NDArray *matrix =
-      NDArrayFactory::create(input->ordering(), {n, n}, input->dataType(), context);  //, block.getWorkspace());
+      new NDArray(NDArrayFactory::create(input->ordering(), {n, n}, input->dataType(), context));  //, block.getWorkspace());
   for (sd::LongType e = 0; e < output->lengthOf(); e++) {
     for (sd::LongType k = e * n2, row = 0; k < (e + 1) * n2; ++k, ++row) {
       matrix->p(row, input->e<T>(k));
@@ -402,6 +405,7 @@ sd::Status logAbsDeterminant_(LaunchContext* context, NDArray* input, NDArray* o
 
 sd::Status logAbsDeterminant(sd::LaunchContext* context, NDArray* input, NDArray* output) {
   BUILD_SINGLE_SELECTOR(input->dataType(), return logAbsDeterminant_, (context, input, output), SD_FLOAT_TYPES);
+  return sd::Status::BAD_PARAMS;
 }
 
 template <typename T>
@@ -411,11 +415,11 @@ static sd::Status inverse_(LaunchContext* context, NDArray* input, NDArray* outp
   auto totalCount = output->lengthOf() / n2;
   float zerof = 0.f;
   output->assign(zerof);  // fill up output tensor with zeros
-  auto matrix = NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context);
-  auto compound = NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context);
-  auto permutation = NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context);
-  auto lowerMatrix = NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context);
-  auto upperMatrix = NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context);
+  auto* matrix = new NDArray(NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context));
+  auto* compound = new NDArray(NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context));
+  auto* permutation = new NDArray(NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context));
+  auto* lowerMatrix = new NDArray(NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context));
+  auto* upperMatrix = new NDArray(NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context));
   float zero = 0.f;
   for (sd::LongType e = 0; e < totalCount; e++) {
     if (e) matrix->assign(zero);
@@ -464,11 +468,11 @@ static sd::Status lowerInverse_(LaunchContext* context, NDArray* input, NDArray*
   auto totalCount = output->lengthOf() / n2;
   float zero = 0.f;
   output->assign(zero);  // fill up output tensor with zeros
-  auto matrix = NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context);
-  auto compound = NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context);
-  auto permutation = NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context);
-  auto lowerMatrix = NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context);
-  auto upperMatrix = NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context);
+  auto* matrix = new NDArray(NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context));
+  auto* compound = new NDArray(NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context));
+  auto* permutation = new NDArray(NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context));
+  auto* lowerMatrix = new NDArray(NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context));
+  auto* upperMatrix = new NDArray(NDArrayFactory::create('c', {n, n}, DataTypeUtils::fromT<T>(), context));
   for (sd::LongType e = 0; e < totalCount; e++) {
     if (e) matrix->assign(zero);
 
@@ -519,14 +523,17 @@ static sd::Status upperInverse_(LaunchContext* context, NDArray* input, NDArray*
 
 sd::Status inverse(sd::LaunchContext* context, NDArray* input, NDArray* output) {
   BUILD_SINGLE_SELECTOR(input->dataType(), return inverse_, (context, input, output), SD_FLOAT_TYPES);
+  return sd::Status::BAD_PARAMS;
 }
 
 sd::Status lowerInverseFunctor(sd::LaunchContext* context, NDArray* input, NDArray* output) {
   BUILD_SINGLE_SELECTOR(input->dataType(), return lowerInverse_, (context, input, output), SD_FLOAT_TYPES);
+  return sd::Status::BAD_PARAMS;
 }
 
 sd::Status upperInverseFunctor(sd::LaunchContext* context, NDArray* input, NDArray* output) {
   BUILD_SINGLE_SELECTOR(input->dataType(), return upperInverse_, (context, input, output), SD_FLOAT_TYPES);
+  return sd::Status::BAD_PARAMS;
 }
 
 template <typename T>
@@ -541,13 +548,14 @@ static bool checkCholeskyInput_(sd::LaunchContext* context, NDArray * input) {
             DataTypeUtils::min_positive<T>())
           return false;
 
-    NDArray *output = NDArrayFactory::create<T>(static_cast<T>(0.), context);
-    if (sd::Status::OK != determinant(context, thisMatrix, output)) return false;
-    if (output->e<T>(0) <= T(0)) return 0;
+    NDArray *output = new NDArray(NDArrayFactory::create<T>(static_cast<T>(0.), context));
+    if (sd::Status::OK != determinant(context, thisMatrix, output)) { delete output; return false; }
+    if (output->e<T>(0) <= T(0)) { delete output; return false; }
     NDArray reversedMatrix(*thisMatrix);
-    if (sd::Status::OK != inverse(context, thisMatrix, &reversedMatrix)) return false;
-    if (sd::Status::OK != determinant(context, &reversedMatrix, output)) return false;
-    if (output->e<T>(0) <= T(0)) return 0;
+    if (sd::Status::OK != inverse(context, thisMatrix, &reversedMatrix)) { delete output; return false; }
+    if (sd::Status::OK != determinant(context, &reversedMatrix, output)) { delete output; return false; }
+    if (output->e<T>(0) <= T(0)) { delete output; return false; }
+    delete output;
   }
 
   return true;
@@ -555,6 +563,7 @@ static bool checkCholeskyInput_(sd::LaunchContext* context, NDArray * input) {
 
 bool checkCholeskyInput(sd::LaunchContext* context, NDArray * input) {
   BUILD_SINGLE_SELECTOR(input->dataType(), return checkCholeskyInput_, (context, input), SD_FLOAT_TYPES);
+  return false;
 }
 
 template <typename T>
@@ -598,6 +607,7 @@ sd::Status cholesky_(LaunchContext* context, NDArray* input, NDArray* output, bo
 
 sd::Status cholesky(sd::LaunchContext* context, NDArray* input, NDArray* output, bool inplace) {
   BUILD_SINGLE_SELECTOR(input->dataType(), return cholesky_, (context, input, output, inplace), SD_FLOAT_TYPES);
+  return sd::Status::BAD_PARAMS;
 }
 
 template <typename T>
@@ -620,6 +630,7 @@ sd::Status logdetFunctor_(LaunchContext* context, NDArray* input, NDArray* outpu
 
 sd::Status logdetFunctor(sd::LaunchContext* context, NDArray* input, NDArray* output) {
   BUILD_SINGLE_SELECTOR(input->dataType(), return logdetFunctor_, (context, input, output), SD_FLOAT_TYPES);
+  return sd::Status::BAD_PARAMS;
 }
 
 sd::Status lup(sd::LaunchContext* context, NDArray* input, NDArray* compound, NDArray* permutation) {

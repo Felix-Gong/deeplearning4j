@@ -236,6 +236,7 @@ public class ModelSerializer {
             ZipEntry config = new ZipEntry(CONFIGURATION_JSON);
             zipfile.putNextEntry(config);
             dos.write(json.getBytes());
+            dos.flush();
 
             // Save parameters as binary
             ZipEntry coefficients = new ZipEntry(COEFFICIENTS_BIN);

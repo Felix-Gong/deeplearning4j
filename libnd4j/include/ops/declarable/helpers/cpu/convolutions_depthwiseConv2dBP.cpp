@@ -96,7 +96,7 @@ static void depthwiseConv2dBP_(NDArray* input, NDArray* weights, NDArray* bias, 
   NDArray *gradOreshaped = gradO->reshape(gradO->ordering(), gradOreShape);
 
   // ----- calculation of gradW and gradB ----- //
-  NDArray *zero = NDArrayFactory::create(0.f, input->getContext());
+  NDArray *zero = NDArrayFactory::create_<float>(0.f, input->getContext());
   helpers::im2col(
       *input->getContext(), *input, columns, kH, kW, sH, sW, pH, pW, dH, dW,
   *zero);  // [bS, iC, iH, iW] is convoluted to [bS, iC, kH, kW, oH, oW]

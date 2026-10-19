@@ -30,8 +30,8 @@ static void hashCode_(LaunchContext *context, NDArray &array, NDArray &result) {
   sd::LongType blockSize = 32;
   auto length = array.lengthOf();
   int numBlocks = length / blockSize + ((length % blockSize == 0) ? 0 : 1);
-  auto tempA = NDArrayFactory::create<sd::LongType>('c', {numBlocks}, context);
-  auto tempB = NDArrayFactory::create<sd::LongType>('c', {numBlocks / blockSize + 1}, context);
+  auto *tempA = new NDArray(NDArrayFactory::create<sd::LongType>('c', {numBlocks}, context));
+  auto *tempB = new NDArray(NDArrayFactory::create<sd::LongType>('c', {numBlocks / blockSize + 1}, context));
 
   auto buffer = array.bufferAsT<T>();
   auto tempBufferA = tempA->bufferAsT<sd::LongType>();

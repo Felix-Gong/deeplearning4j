@@ -33,7 +33,7 @@ CONFIGURABLE_OP_IMPL(clipbynorm, 1, 1, true, 1, 0) {
   auto input = INPUT_VARIABLE(0);
   auto output = OUTPUT_VARIABLE(0);
   if (block.numT() > 0) {
-    auto clipNorm = NDArrayFactory::create(output->dataType(), T_ARG(0), block.launchContext());
+    auto* clipNorm = new NDArray(NDArrayFactory::create(output->dataType(), T_ARG(0), block.launchContext()));
     const bool isInplace = block.isInplace();
     helpers::clipByNorm(block.launchContext(), input, output, *block.getIArguments(), clipNorm, isInplace, false);
     delete clipNorm;
@@ -52,7 +52,7 @@ CUSTOM_OP_IMPL(clipbynorm_bp, 2, 1, false, 1, 0) {
 
   auto gradI = OUTPUT_VARIABLE(0);
   if (block.numT() > 0) {
-    auto clipNorm = NDArrayFactory::create(gradI->dataType(), T_ARG(0), block.launchContext());
+    auto* clipNorm = new NDArray(NDArrayFactory::create(gradI->dataType(), T_ARG(0), block.launchContext()));
     helpers::clipByNormBp(block.launchContext(), input, gradO, gradI, *block.getIArguments(), clipNorm, false);
     delete clipNorm;
   } else {

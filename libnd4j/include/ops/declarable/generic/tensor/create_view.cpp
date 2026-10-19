@@ -73,7 +73,7 @@ CUSTOM_OP_IMPL(create_view, -2, -1, true, 0, -2) {
 
   auto numIndices = block.width() - 1;
 
-  auto all = NDIndexUtils::createAll();
+  auto all = new NDArray(NDIndexUtils::createAll());
   // Padding remaining dimensions with all() index if too few indices provided
   if (numIndices - numNewAxis < static_cast<size_t>(inputBase->rankOf())) {
     for (int e = numIndices; e < inputBase->rankOf() + numNewAxis; e++) {
