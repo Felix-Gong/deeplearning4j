@@ -77,7 +77,17 @@ endfunction()
 function(setup_instantiation_flags)
     # Setup FlatBuffers
     set(PREPROCESS_FLATBUFFERS_VERSION "25.2.10")
-    set(PREPROCESS_FLATBUFFERS_URL "https://github.com/google/flatbuffers/archive/v${PREPROCESS_FLATBUFFERS_VERSION}.tar.gz")
+    if(DEFINED ENV{GH_MIRROR} AND NOT "$ENV{GH_MIRROR}" STREQUAL "")
+
+        set(GH_MIRROR_FB_BASE "$ENV{GH_MIRROR}")
+
+    else()
+
+        set(GH_MIRROR_FB_BASE "https://github.com")
+
+    endif()
+
+    set(PREPROCESS_FLATBUFFERS_URL "${GH_MIRROR_FB_BASE}/google/flatbuffers/archive/v${PREPROCESS_FLATBUFFERS_VERSION}.tar.gz")
     set(PREPROCESS_FB_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/preprocess-flatbuffers-src")
     
     set(PREPROCESS_FB_HEADER "${PREPROCESS_FB_SOURCE_DIR}/include/flatbuffers/flatbuffers.h")
