@@ -98,7 +98,7 @@ CUSTOM_OP_IMPL(fused_batch_norm, 3, 3, false, 0, 2) {
 
   const int restSize = x->lengthOf() / iD;
 
-  auto* xAffected = NDArrayFactory::create(x->ordering(), {restSize, iD}, mean->dataType(), block.launchContext());
+  auto* xAffected = new NDArray(NDArrayFactory::create(x->ordering(), {restSize, iD}, mean->dataType(), block.launchContext()));
   xAffected->assign(xCast);
 
   const int restSizeMinusOne = (restSize > 1) ? (restSize - 1) : 1;

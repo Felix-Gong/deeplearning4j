@@ -90,7 +90,7 @@ static void depthwiseConv2d_(sd::graph::Context& block, NDArray* input, NDArray*
   std::vector<sd::LongType> colShape = {bS, iC, kH, kW, oH, oW};
   NDArray columns(input->ordering(),colShape, input->dataType(), input->getContext());
   NDArray *outputReshaped = output->reshape(output->ordering(), outReShape, false);
-  NDArray *zero = NDArrayFactory::create(0.f, input->getContext());
+  NDArray *zero = NDArrayFactory::create_<float>(0.f, input->getContext());
   helpers::im2col(
       *output->getContext(), *input, columns, kH, kW, sH, sW, pH, pW, dH, dW,
       *zero);  // [bS, iC, iH, iW] is convoluted to [bS, iC, kH, kW, oH, oW]

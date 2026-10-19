@@ -64,7 +64,7 @@ CUSTOM_OP_IMPL(ctc_loss, 4, 1, false, 0, 1) {
                "CtcLoss: wrong shape of output array, expected is %s but got %s instead !",
                ShapeUtils::shapeAsString(targetLabelLengths).c_str(), ShapeUtils::shapeAsString(outputLosses).c_str());
 
-  auto emptyGradients = NDArrayFactory::empty<float>();
+  auto* emptyGradients = new NDArray(NDArrayFactory::empty<float>());
   helpers::ctcLoss(block, *logitInput, *targetLabels, *logitInputLengths, *targetLabelLengths, *outputLosses,
                             *emptyGradients, blankIndex);
 
@@ -130,7 +130,7 @@ CUSTOM_OP_IMPL(ctc_loss_grad, 4, 1, false, 0, 1) {
                "CtcLoss Gradient: wrong shape of output array, expected is %s but got %s instead !",
                ShapeUtils::shapeAsString(logitInput).c_str(), ShapeUtils::shapeAsString(outputGradients).c_str());
 
-  auto emptyLoss = NDArrayFactory::empty<float>();
+  auto* emptyLoss = new NDArray(NDArrayFactory::empty<float>());
   helpers::ctcLoss(block, *logitInput, *targetLabels, *logitInputLengths, *targetLabelLengths, *emptyLoss,
                             *outputGradients, blankIndex);
   delete emptyLoss;

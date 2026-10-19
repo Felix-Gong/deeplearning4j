@@ -40,7 +40,7 @@ void bgemm(NDArray *a,  NDArray *b,  NDArray *c,   NDArray *alphas,   NDArray *b
   if(all != nullptr)
     allIndex = all;
   else {
-    NDArray *allLocal = NDIndexUtils::createAll();
+    NDArray *allLocal = new NDArray(NDIndexUtils::createAll());
     allIndex = allLocal;
   }
 
@@ -53,7 +53,7 @@ void bgemm(NDArray *a,  NDArray *b,  NDArray *c,   NDArray *alphas,   NDArray *b
 
   //divide by 2: queries and keys
   for(int i = 0; i < batchSize; i++) {
-    auto point = NDIndexUtils::createPoint(i);
+    NDArray *point = new NDArray(NDIndexUtils::createPoint(i));
     auto aSlice = createView.evaluate({a,point,allIndex,allIndex},{},{});
     auto bSlice = createView.evaluate({b,point,allIndex,allIndex},{},{});
     auto outSlice = createView.evaluate({c,point,allIndex,allIndex},{},{});

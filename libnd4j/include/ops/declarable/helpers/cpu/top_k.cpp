@@ -60,9 +60,9 @@ static sd::Status topKFunctor_(NDArray* input, NDArray* values, NDArray* indices
       auto trial = (*input)(e, dimsToExclude);
 
       // fill up the first k elements
-      NDArray *topValues = NDArrayFactory::create<T>('c', {k}, input->getContext());
-      NDArray *sortedVals = NDArrayFactory::create<T>('c', {k}, input->getContext());
-      NDArray *topIndices = NDArrayFactory::create<sd::LongType>('c', {k}, input->getContext());
+      NDArray *topValues = new NDArray(NDArrayFactory::create<T>('c', {k}, input->getContext()));
+      NDArray *sortedVals = new NDArray(NDArrayFactory::create<T>('c', {k}, input->getContext()));
+      NDArray *topIndices = new NDArray(NDArrayFactory::create<sd::LongType>('c', {k}, input->getContext()));
       for (sd::LongType pos = 0; pos < k; ++pos) {
         topIndices->r<sd::LongType>(pos) = pos;
         topValues->r<T>(pos) = trial->t<T>(pos);

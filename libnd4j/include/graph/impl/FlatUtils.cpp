@@ -104,7 +104,7 @@ flatbuffers::Offset<::graph::FlatArray> FlatUtils::toFlatArray(flatbuffers::Flat
   auto byteVector = array.asByteVector();
 
   auto fBuffer = builder.CreateVector(byteVector);
-  auto fShape = builder.CreateVector(array.getShapeInfoAsFlatVector());
+  auto fShape = builder.CreateVector(*array.getShapeInfoAsFlatVector());
 
   auto bo = static_cast<::graph::ByteOrder>(BitwiseUtils::asByteOrder());
 

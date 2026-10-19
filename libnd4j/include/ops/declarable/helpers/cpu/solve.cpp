@@ -67,7 +67,7 @@ static sd::Status solveFunctor_(sd::LaunchContext* context, NDArray* leftInput, 
   auto permuShape = rightInput->getShapeAsVector();
   permuShape->pop_back();
   std::vector<sd::LongType> &shapeDeRef = *permuShape;
-  auto permutations = NDArrayFactory::create<sd::LongType>('c', shapeDeRef, context);
+  auto* permutations = new NDArray(NDArrayFactory::create<sd::LongType>('c', shapeDeRef, context));
   helpers::lu(context, leftInput, leftOutput, permutations);
 
 

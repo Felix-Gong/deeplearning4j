@@ -390,8 +390,8 @@ CUSTOM_OP_IMPL(huber_loss_grad, 3, 3, false, 1, 1) {
         *dLdl = 0.;
         *dLdw = 0.;
       } else {
-        auto numOfNonZeroWeightsScalar =
-            NDArrayFactory::create(dLdw->dataType(), numOfNonZeroWeights, block.launchContext());
+        auto* numOfNonZeroWeightsScalar =
+            new NDArray(NDArrayFactory::create(dLdw->dataType(), numOfNonZeroWeights, block.launchContext()));
 
         if (weights->isScalar()) {
           auto* sumE = E->reduceNumber(reduce::Sum);

@@ -277,7 +277,7 @@ Type unitLossAndGrad(const Type *logP, int incP, Type *gradPtr, int incG, const 
   // create temp Array for holding bettaArr [lenT,lenSB]
   // create temp Array for holding alphaArr [lenT,lenSB]
   int bufferC = gradPtr ? 2 : 1;
-  NDArray *bufferArr = NDArrayFactory::create<Type>('c', {bufferC, lenT, lenSB});
+  NDArray *bufferArr = new NDArray(NDArrayFactory::create<Type>('c', {bufferC, lenT, lenSB}));
   auto bufferPtr = bufferArr->bufferAsT<Type>();
   auto incA = bufferArr->stridesOf()[1];
   auto bettaBufferPtr = bufferPtr + bufferArr->stridesOf()[0];

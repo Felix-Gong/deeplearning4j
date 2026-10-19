@@ -60,7 +60,7 @@ DECLARE_TYPES(choose) {
 
 DECLARE_SHAPE_FN(choose) {
   int mode = INT_ARG(0);
-  auto numResults = NDArrayFactory::create<LongType>(0L);
+  auto* numResults = new NDArray(NDArrayFactory::create<LongType>(0L));
   if (block.width() > 1) {
     auto first = INPUT_VARIABLE(0);
     auto second = INPUT_VARIABLE(1);
@@ -78,6 +78,7 @@ DECLARE_SHAPE_FN(choose) {
                                                                      ArrayOptions::dataType(inputShape->at(0)));
 
   auto shapeScalar = ConstantShapeHelper::getInstance().scalarShapeInfo(INT64);
+  delete numResults;
   return SHAPELIST(newShape, shapeScalar);
 }
 

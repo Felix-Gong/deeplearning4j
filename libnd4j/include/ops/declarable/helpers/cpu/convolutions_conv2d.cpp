@@ -71,7 +71,7 @@ static void conv2d_(sd::graph::Context& block, NDArray* input, NDArray* weights,
   auto ctx = block.launchContext();
 
   NDArray *inputNchw = nullptr;  // Track NHWC permutation for cleanup
-  NDArray *zeroVal =  NDArrayFactory::create(0.f, input->getContext());
+  NDArray *zeroVal =  new NDArray(NDArrayFactory::create(0.f, input->getContext()));
   if (isNCHW) {
     helpers::im2col(*ctx, *input, *colP, kH, kW, sH, sW, pH, pW, dH, dW,
                     *zeroVal);
