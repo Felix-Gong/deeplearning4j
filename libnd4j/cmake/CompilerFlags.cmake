@@ -51,7 +51,7 @@ endif()
 
 # GCC-specific error limiting
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    add_compile_options(-fmax-errors=3)        # Stop on first few errors
+    add_compile_options(-fmax-errors=200)        # Stop on first few errors
 endif()
 
 # Clang-specific workarounds for source location limits

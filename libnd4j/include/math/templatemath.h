@@ -486,12 +486,14 @@ SD_HOST_DEVICE SD_INLINE sd::LongType sd_abs<sd::LongType, sd::LongType>(sd::Lon
  return result;
 }
 
+#ifndef __LP64__
 template <>
 SD_HOST_DEVICE SD_INLINE long sd_abs<long, long>(long value) {
  long result = labs(value);
  SD_PRINT_MATH_FUNC("sd_abs<long>", value, result,long);
  return result;
 }
+#endif // __LP64__
 #endif // HAS_LONG
 
 #ifdef HAS_BOOL
@@ -715,12 +717,14 @@ SD_HOST_DEVICE SD_INLINE bool sd_isnan<sd::LongType>(sd::LongType value) {
   return result;
 }
 
+#ifndef __LP64__
 template <>
 SD_HOST_DEVICE SD_INLINE bool sd_isnan<long>(long value) {
   bool result = false;
   SD_PRINT_MATH_FUNC("sd_isnan<long>", value, result,long);
   return result;
 }
+#endif // __LP64__
 #endif // HAS_LONG
 
 #ifdef HAS_UINT64
@@ -886,12 +890,14 @@ SD_HOST_DEVICE SD_INLINE bool sd_isinf<sd::LongType>(sd::LongType value) {
   return result;
 }
 
+#ifndef __LP64__
 template <>
 SD_HOST_DEVICE SD_INLINE bool sd_isinf<long>(long value) {
   bool result = false;
   SD_PRINT_MATH_FUNC("sd_isinf<long>", value, result,long);
   return result;
 }
+#endif // __LP64__
 
 
 #endif // HAS_LONG
@@ -2165,6 +2171,7 @@ inline SD_DEVICE sd::LongType sd_atomicAdd<sd::LongType>(sd::LongType* address, 
   return old;
 }
 
+#ifndef __LP64__
 template <>
 inline SD_DEVICE long sd_atomicAdd<long>(long* address, long val) {
   unsigned long long* address_as_ull = (unsigned long long int*)address;
@@ -2177,6 +2184,7 @@ inline SD_DEVICE long sd_atomicAdd<long>(long* address, long val) {
   } while (assumed != old);
   return old;
 }
+#endif // __LP64__
 #endif // HAS_LONG
 
 // Custom atomicAdd for uint32_t
