@@ -1968,7 +1968,7 @@ sd::TadPack *tadOnlyShapeInfo(OpaqueDataBuffer *hXShapeInfo, sd::LongType *dimen
 
     auto pack = sd::ConstantTadHelper::getInstance().tadForDimensions(
         shapeFromCache, dimension, dimensionLength);
-    return pack;
+    return pack.get();
   } catch (std::exception &e) {
     sd::LaunchContext::defaultContext()->errorReference()->setErrorCode(1);
     sd::LaunchContext::defaultContext()->errorReference()->setErrorMessage(e.what());

@@ -45,7 +45,7 @@ class SD_LIB_EXPORT TadPack {
                     ConstantOffsetsBuffer *offets, LongType numTads,
                    LongType* dimensions = nullptr, LongType dimLength = 0);
   TadPack() = default;
-  ~TadPack() {};
+  ~TadPack();
 
   LongType* primaryShapeInfo();
   LongType* primaryOffsets();
@@ -120,6 +120,7 @@ class SD_LIB_EXPORT TadPack {
 
   void print(const char* msg);
   bool operator==( TadPack& other);
+  std::string getStackTraceAsString() const;
 };
 }  // namespace sd
 
